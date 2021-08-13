@@ -2,7 +2,7 @@
 //  NewsFeedViewController.swift
 //  AppleNewsFeed
 //
-//  Created by Irunya =} on 10/08/2021.
+//  Created by Irunya =} on 09/08/2021.
 //
 
 import UIKit
@@ -23,7 +23,7 @@ class NewsFeedViewController: UIViewController {
     
     func activityIndicator(animated: Bool){
         DispatchQueue.main.async {
-            if animated{
+            if animated {
                 self.activityIndicatorView.isHidden = false
                 self.activityIndicatorView.startAnimating()
             } else {
@@ -46,6 +46,7 @@ class NewsFeedViewController: UIViewController {
         let jsonUrl = "https://newsapi.org/v2/everything?q=apple&from=2021-07-21&to=2021-08-08&apiKey=1920b7f830414a5bb662b581372ff993"
         
         guard let url = URL(string: jsonUrl) else {return}
+        
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "GET"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
@@ -53,6 +54,7 @@ class NewsFeedViewController: UIViewController {
         let session = URLSession(configuration: .default)
         let task = session.dataTask(with: urlRequest) { data, response, err in
             
+            //            print("response: ", response as Any)
             if let err = err {
                 self.basicAlert(title: "Error!", message: "\(err.localizedDescription)")
             }
@@ -70,7 +72,6 @@ class NewsFeedViewController: UIViewController {
             }
         }
         task.resume()
- 
     }
     
     func populateData(_ dict: [String: Any]){
@@ -96,7 +97,8 @@ extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "NewsFeed", for: indexPath) as? NewsTableViewCell else {
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "newsFeed", for: indexPath) as? NewsTableViewCell else {
             return UITableViewCell()
         }
         
@@ -114,5 +116,22 @@ extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let storybord = UIStoryboard(name: "Main", bundle: Bundle.main)
+        guard let vc = storybord.instantiateViewController(identifier: "DetailViewController") as? DetailViewController else {
+            return
+        }
+        
+        let item = items[indexPath.row]
+        vc.contentString = item.description
+        vc.titleString = item.title
+        vc.webURLString = item.url
+        vc.newsImage = item.image
+        
+        //        present(vc, animated: true, completion: nil)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

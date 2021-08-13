@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  AppleNewsFeed
 //
-//  Created by Irunya =} on 10/08/2021.
+//  Created by Irunya =} on 09/08/2021.
 //
 
 import UIKit

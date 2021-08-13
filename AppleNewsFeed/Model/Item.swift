@@ -17,7 +17,7 @@ class Item: JSONDecodable {
     var image: UIImage?
     var publishedAt: String
     
-        required init?(json: JSON) {
+    required init?(json: JSON) {
         self.description = "description" <~~ json ?? ""
         self.title = "title" <~~ json ?? ""
         self.url = "url" <~~ json ?? ""
@@ -31,11 +31,12 @@ class Item: JSONDecodable {
     
     private func laodImage() -> UIImage? {
         var returnImage: UIImage?
-        guard let url = URL(string: urlToImage) else {
+        guard let url = URL(string: urlToImage)
+        else {
             return returnImage
         }
-        if let data = try? Data(contentsOf: url){
-            if let image = UIImage(data: data){
+        if let data = try? Data(contentsOf: url) {
+            if let image = UIImage(data: data) {
                 returnImage = image
             }
         }
